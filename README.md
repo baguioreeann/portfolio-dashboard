@@ -10,6 +10,8 @@ No API keys needed for prices: crypto comes from
 [CoinGecko](https://www.coingecko.com/en/api), stocks and ETFs from Yahoo
 Finance's public quote endpoint.
 
+![Portfolio Dashboard screenshot](docs/dashboard-screenshot.png)
+
 ## Stack
 
 - Java 17, Spring Boot 4 (Web MVC, Data JPA, Thymeleaf, Validation)
