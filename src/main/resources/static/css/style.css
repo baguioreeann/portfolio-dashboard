@@ -1,0 +1,170 @@
+:root {
+    color-scheme: light dark;
+    --bg: #f7f7f8;
+    --panel: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --border: #e2e2e2;
+    --accent: #2563eb;
+    --up: #16803c;
+    --down: #c0362c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 2rem;
+    max-width: 900px;
+    margin-inline: auto;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.1rem;
+    margin: 1.5rem 0 0.5rem;
+}
+
+.message {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.asset-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 1rem 1rem;
+    margin-bottom: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.up {
+    color: var(--up);
+    font-weight: 600;
+}
+
+.down {
+    color: var(--down);
+    font-weight: 600;
+}
+
+.empty {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.link-button {
+    background: none;
+    color: var(--down);
+    padding: 0;
+    font-size: 0.85rem;
+    text-decoration: underline;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.add-asset {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.add-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.add-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.add-form input, .add-form select {
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.hint {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #16181d;
+        --panel: #1e2128;
+        --text: #f0f0f0;
+        --muted: #9a9a9a;
+        --border: #2c2f36;
+        --up: #4ade80;
+        --down: #f87171;
+    }
+
+    .message {
+        background: #1e2540;
+        border-color: #2f3a63;
+    }
+}

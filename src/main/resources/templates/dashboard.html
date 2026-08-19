@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Portfolio Dashboard</h1>
+    <form th:action="@{/refresh}" method="post" class="inline-form">
+        <button type="submit">Refresh prices</button>
+    </form>
+</header>
+
+<p th:if="${message}" class="message" th:text="${message}"></p>
+
+<section th:each="type : ${sectionOrder}" class="asset-section">
+    <h2 th:text="${type.displayName}"></h2>
+
+    <table th:if="${not #lists.isEmpty(byType.get(type))}">
+        <thead>
+        <tr>
+            <th>Label</th>
+            <th>ID / Ticker</th>
+            <th>Price</th>
+            <th>Change</th>
+            <th>Last checked</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="asset : ${byType.get(type)}">
+            <td th:text="${asset.label}"></td>
+            <td th:text="${asset.apiId}"></td>
+            <td th:text="${asset.currentPrice != null ? #numbers.formatDecimal(asset.currentPrice, 1, 2) : '—'}"></td>
+            <td th:if="${asset.changePct != null}"
+                th:text="${(asset.changePct > 0 ? '+' : '') + #numbers.formatDecimal(asset.changePct, 1, 2) + '%'}"
+                th:classappend="${asset.changePct >= 2 ? 'up' : (asset.changePct &lt;= -2 ? 'down' : '')}"></td>
+            <td th:unless="${asset.changePct != null}">—</td>
+            <td th:text="${asset.lastChecked != null ? #temporals.format(asset.lastChecked, 'yyyy-MM-dd HH:mm') : 'never'}"></td>
+            <td>
+                <form th:action="@{/assets/{id}/delete(id=${asset.id})}" method="post" class="inline-form">
+                    <button type="submit" class="link-button">Remove</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.isEmpty(byType.get(type))}" class="empty">No assets tracked yet.</p>
+</section>
+
+<section class="add-asset">
+    <h2>Add asset</h2>
+    <form th:action="@{/assets}" method="post" class="add-form">
+        <label>
+            Type
+            <select name="type">
+                <option th:each="t : ${assetTypes}" th:value="${t}" th:text="${t.displayName}"></option>
+            </select>
+        </label>
+        <label>
+            ID / Ticker
+            <input type="text" name="apiId" placeholder="e.g. bitcoin, AAPL, QQQ" required>
+        </label>
+        <label>
+            Label
+            <input type="text" name="label" placeholder="e.g. BTC" required>
+        </label>
+        <button type="submit">Add</button>
+    </form>
+    <p class="hint">
+        Crypto uses a <a href="https://www.coingecko.com/" target="_blank" rel="noopener">CoinGecko</a> id
+        (e.g. <code>bitcoin</code>); Stocks and ETFs use a Yahoo Finance ticker (e.g. <code>AAPL</code>, <code>QQQ</code>).
+    </p>
+</section>
+
+</body>
+</html>
