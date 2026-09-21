@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reeann.portfoliodashboard.model.Asset;
 import com.reeann.portfoliodashboard.model.AssetType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -17,14 +18,24 @@ import java.time.Duration;
 @Service
 public class PriceFetchService {
 
-    private static final String CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
-    private static final String STOCK_API_URL = "https://query1.finance.yahoo.com/v8/finance/chart/%s";
+    private static final String DEFAULT_CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
+    private static final String DEFAULT_STOCK_API_URL = "https://query1.finance.yahoo.com/v8/finance/chart/%s";
     private static final String CURRENCY = "usd";
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final String cryptoApiUrl;
+    private final String stockApiUrl;
+
+    public PriceFetchService(
+            @Value("${portfolio.pricefetch.crypto-api-url:" + DEFAULT_CRYPTO_API_URL + "}") String cryptoApiUrl,
+            @Value("${portfolio.pricefetch.stock-api-url:" + DEFAULT_STOCK_API_URL + "}") String stockApiUrl) {
+        this.cryptoApiUrl = cryptoApiUrl;
+        this.stockApiUrl = stockApiUrl;
+    }
 
     public double fetchPrice(Asset asset) {
         if (asset.getType() == AssetType.CRYPTO) {
@@ -34,7 +45,7 @@ public class PriceFetchService {
     }
 
     private double fetchCryptoPrice(String coinId) {
-        String url = CRYPTO_API_URL + "?ids=" + encode(coinId) + "&vs_currencies=" + CURRENCY;
+        String url = cryptoApiUrl + "?ids=" + encode(coinId) + "&vs_currencies=" + CURRENCY;
         JsonNode root = get(url);
         JsonNode priceNode = root.path(coinId).path(CURRENCY);
         if (priceNode.isMissingNode()) {
@@ -44,7 +55,7 @@ public class PriceFetchService {
     }
 
     private double fetchStockPrice(String symbol) {
-        String url = String.format(STOCK_API_URL, encode(symbol));
+        String url = String.format(stockApiUrl, encode(symbol));
         JsonNode root = get(url);
         JsonNode priceNode = root.path("chart").path("result").path(0).path("meta").path("regularMarketPrice");
         if (priceNode.isMissingNode()) {
